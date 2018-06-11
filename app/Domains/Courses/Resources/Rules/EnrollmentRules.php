@@ -1,0 +1,29 @@
+<?php
+
+namespace Emtudo\Domains\Courses\Resources\Rules;
+
+use Emtudo\Support\Shield\Rules;
+
+class EnrollmentRules extends Rules
+{
+    public function defaultRules()
+    {
+        return [
+            'student_id' => 'required|exists_public_id:users,id',
+            'group_id' => 'required|exists_public_id_by_tenant:groups,id',
+            'route_id' => 'nullable|sometimes|exists_public_id_by_tenant:routes,id',
+        ];
+    }
+
+    public function creating($callback = null)
+    {
+        return $this->returnRules([
+        ], $callback);
+    }
+
+    public function updating($callback = null)
+    {
+        return $this->returnRules([
+        ], $callback);
+    }
+}

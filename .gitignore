@@ -1,0 +1,14 @@
+/public_html/hot
+/public_html/storage
+/storage/*.key
+/vendor
+/.idea
+/.vagrant
+Homestead.json
+Homestead.yaml
+.env
+.ssl
+/.vscode
+.php_cs.cache
+docker-compose.override.yml
+nohup.out

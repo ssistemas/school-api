@@ -1,0 +1,82 @@
+###############################################
+### DO NOT CHANGE THIS FILE DIRECTLY        ###
+### USE docker-compose.override.yml instead ###
+###############################################
+
+# CONFIG
+version: '2'
+
+# VOLUMES
+volumes:
+  # MYSQL
+  emtudo-school-mysql-data:
+    driver: local
+  # REDIS
+  emtudo-school-redis-data:
+    driver: local
+  # ~/.config
+  emtudo-school-temp-config:
+    driver: local
+  # ~/.local
+  emtudo-school-temp-local:
+    driver: local
+  # ~/.cache
+  emtudo-school-temp-cache:
+    driver: local
+  # ~/.composer
+  emtudo-school-temp-composer:
+    driver: local
+
+# SERVICES
+services:
+  # API
+  api:
+    image: ambientum/php:7.2-nginx
+    container_name: emtudo-school-api
+    environment:
+      - XDEBUG_ENABLED=true
+      - PHP_IDE_CONFIG=serverName=ambientum
+    volumes:
+      - .:/var/www/app
+      - emtudo-school-temp-config:/home/ambientum/.config
+      - emtudo-school-temp-cache:/home/ambientum/.cache
+      - emtudo-school-temp-local:/home/ambientum/.local
+      - emtudo-school-temp-composer:/home/ambientum/.composer
+    links:
+      - mysql
+      - cache
+      - mailcatcher
+    ports:
+      - 8000:8080
+      - 8443:8083
+
+  # MAILCATCHER
+  mailcatcher:
+    image:  ambientum/mailcatcher:latest
+    container_name: emtudo-school-mailcatcher
+    ports:
+      - 1025:1025
+      - 1080:1080
+
+  # MYSQL
+  mysql:
+    image: ambientum/mysql:5.7
+    container_name: emtudo-school-mysql
+    volumes:
+      - emtudo-school-mysql-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=emtudo
+      - MYSQL_DATABASE=school
+      - MYSQL_USER=emtudo
+      - MYSQL_PASSWORD=emtudo
+
+  cache:
+    image: redis:4.0
+    container_name: emtudo-school-redis
+    command: --appendonly yes
+    volumes:
+      - emtudo-school-redis-data:/data
+    ports:
+      - 6379
