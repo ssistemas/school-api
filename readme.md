@@ -6,6 +6,8 @@
 
 ## How to install
 
+[How to install video In Portugues](https://www.youtube.com/watch?v=RHxsmFYcmIc)
+
 ```shell
 composer create-project emtudo/school-api
 cd school-api
